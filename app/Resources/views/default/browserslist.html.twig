@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table>
+        {% for browser in browsersList %}
+            <tr>
+                <td>
+                    <a href="{{ path('api_v1_get_browser', {'_format': 'html', 'browser': browser.id }) }}">{{ browser.name }}</a>
+                </td>
+                <td><button onclick="location.href='{{ path('web_editbrowser', {'browser': browser.id}) }}'">Edit</button></td>
+                <td><button onclick="removeBrowser({{ browser.id }})">Remove</button></td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+

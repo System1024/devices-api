@@ -1,0 +1,21 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table>
+        {% for version in browserVersionList %}
+            <tr>
+                <td>
+                    <a href="{{ path('api_v1_get_browserversion', {'_format': 'html', 'browserVersion': version.id }) }}">{{ version.browser.name }} {{ version.version }}</a>
+                </td>
+                <td>
+                    <button onclick="location.href='{{ path('web_editbrowserversion', {'browserVersion': version.id}) }}'">Edit</button>
+                </td>
+                <td>
+                    <button onclick="removeBrowserVersion({{ version.id }})">Remove</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+

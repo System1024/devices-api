@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+
+    {% if browserVersion is defined %}
+        <button onclick="editBrowserVersion({{ browserVersion.id }})">Edit</button>
+        <button onclick="removeBrowserVersion({{ browserVersion.id }})">Delete</button>
+    {% else %}
+        <button onclick="addBrowserVersion()">Add</button>
+    {% endif %}
+
+{% endblock %}
+

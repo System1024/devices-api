@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table>
+        {% for device in deviceList %}
+            <tr>
+                <td>
+                    {{ device.devicetype.name }}
+                </td>
+                <td>
+                    {{ device.name }}
+                </td>
+                <td>
+                    {{ device.description }}
+                </td>
+                <td>
+                    <button onclick="location.href='{{ path('web_editdevice', {'device': device.id}) }}'">Edit</button>
+                </td>
+                <td>
+                    <button onclick="removeDevice({{ device.id }})">Remove</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+    <a href="{{ path('web_adddevice') }}">Add device</a>
+{% endblock %}
+

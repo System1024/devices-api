@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <select id="browser">
+    {% for browser in browsersList %}
+        <option value="{{ browser.id }}">{{ browser.name }}</option>
+    {% endfor %}
+    </select>
+    <input type="text" id="version">
+    <input type="button" value="Add" onclick="addBrowserVersion()">
+
+{% endblock %}
+

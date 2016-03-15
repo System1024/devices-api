@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+    {% if device is defined %}
+        <button onclick="editDevice({{ device.id }})">Edit</button>
+        <button onclick="removeDevice({{ device.id }})">Delete</button>
+    {% else %}
+        <button onclick="addDevice()">Add</button>
+    {% endif %}
+
+{% endblock %}

@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8" />
+        <title>{% block title %}Welcome!{% endblock %}</title>
+        {% block stylesheets %}{% endblock %}
+        <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        <script src="{{ asset('assets/js/jquery-2.2.1.min.js') }}"></script>
+        <script src="{{ asset('assets/js/devices.js') }}"></script>
+    </head>
+    <body>
+        <ul>
+            <li><a href="{{ path('homepage') }}">Home page</a> </li>
+            <li>
+                DeviceBrowsers
+                <ul>
+                    <li><a href="{{ path('api_v1_all_devicebrowsers', {'_format': 'html'}) }}">Device browsers</a></li>
+                    <li><a href="{{ path('web_adddevicebrowser') }}">Add device browsers</a></li>
+                </ul>
+            </li>
+            <li>Device
+                <ul>
+                    <li><a href="{{ path('web_listdevice') }}">Device list</a></li>
+                    <li><a href="{{ path('web_adddevice') }}">Add device</a></li>
+                </ul>
+            </li>
+            <li>Browsers
+                <ul>
+                    <li><a href="{{ path('api_v1_all_browser', {'_format': 'html'}) }}">Browsers list</a></li>
+                    <li><a href="{{ path('web_addbrowser') }}">Add browser</a></li>
+                </ul>
+            </li>
+            <li>Browsers versions
+                <ul>
+                    <li><a href="{{ path('api_v1_all_browserversion', {'_format': 'html'}) }}">Browsers version list</a></li>
+                    <li><a href="{{ path('web_addbrowserversion') }}">Add browser version</a></li>
+                </ul>
+            </li>
+        </ul>
+        {% block body %}{% endblock %}
+        {% block javascripts %}{% endblock %}
+    </body>
+</html>

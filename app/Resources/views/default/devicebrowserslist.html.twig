@@ -1,0 +1,30 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <table>
+        {% for device in devicesList %}
+            <tr>
+                <td>
+                    {{ device.device.devicetype.name }}
+                </td>
+                <td>
+                    {{ device.device.name }}
+                </td>
+                <td>
+                    {{ device.browserversion.browser.name }}
+                </td>
+                <td>
+                    {{ device.browserversion.version }}
+                </td>
+                <td>
+                    <button onclick="location.href='{{ path('web_editdevicebrowser', {'deviceBrowser': device.id}) }}'">Edit</button>
+                </td>
+                <td>
+                    <button onclick="removeDeviceBrowser({{ device.id }})">Remove</button>
+                </td>
+            </tr>
+        {% endfor %}
+    </table>
+
+{% endblock %}
+

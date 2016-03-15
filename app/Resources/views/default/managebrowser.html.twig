@@ -1,0 +1,16 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    {{ form_start(form) }}
+    {{ form_widget(form) }}
+    {{ form_end(form) }}
+
+
+    {% if browser is defined %}
+        <button onclick="editBrowser({{ browser.id }})">Edit</button>
+        <button onclick="removeBrowser({{ browser.id }})">Delete</button>
+    {% else %}
+        <button onclick="addBrowser()">Add</button>
+    {% endif %}
+{% endblock %}
+
