@@ -15,6 +15,11 @@ class BrowserRepository extends EntityRepository
 {
     public function addBrowser(Browser $browser)
     {
+        $double = $this->findOneByName($browser->getName());
+        if ($double instanceof Browser) {
+            throw new \Exception('Browser with such name already presents in DB');
+        }
+
         $entityManager = $this->getEntityManager();
         $entityManager->persist($browser);
         $entityManager->flush();

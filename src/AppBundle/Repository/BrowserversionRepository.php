@@ -13,13 +13,33 @@ use AppBundle\Entity\Browserversion;
  */
 class BrowserversionRepository extends EntityRepository
 {
+    /**
+     * Add BrowserVersion to DB
+     * @param Browserversion $browser
+     * @throws \Exception
+     */
     public function addBrowserversion(Browserversion $browser)
     {
+        // Check for doubles
+        $double = $this->findOneBy([
+            'browser' => $browser->getBrowser(),
+            'version' => $browser->getVersion()
+        ]);
+
+        if ($double instanceof Browserversion) {
+            throw new \Exception('Browserversion with such parameters already presents in DB');
+        }
         $entityManager = $this->getEntityManager();
         $entityManager->persist($browser);
         $entityManager->flush();
     }
 
+    /**
+     * Remove BrowserVersion from DB
+     *
+     * @param Browserversion $browser
+     * @throws \Exception
+     */
     public function removeBrowserversion(Browserversion $browser)
     {
         try {
@@ -31,6 +51,11 @@ class BrowserversionRepository extends EntityRepository
         }
     }
 
+    /**
+     * Modify browser version record in DB
+     *
+     * @param Browserversion $browser
+     */
     public function modifyBrowserversion(Browserversion $browser)
     {
         $entityManager = $this->getEntityManager();

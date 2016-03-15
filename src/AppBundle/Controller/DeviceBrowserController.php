@@ -123,11 +123,30 @@ class DeviceBrowserController extends FOSRestController
         $form = $this->createForm(DeviceBrowserType::class, $entity, ['method' => $request->getMethod()]);
         $form->handleRequest($request);
 
+        $statusCode = 204;
+        $out = null;
+        $httpHeader = null;
+
         if ($form->isValid()) {
             $repository = $this->getDoctrine()->getRepository('AppBundle:DeviceBrowser');
             $repository->addDeviceBrowser($entity);
+            $httpHeader = [
+                'Location' => $this->generateUrl('api_v1_get_devicebrowsers', ['id' => $entity->getId()])
+            ];
+
+        } else {
+            $out = [
+                'result' => 'Fail',
+                'message' => 'Form not valid',
+                'request' => $request->request,
+                'errors' => $form->getErrors()
+            ];
+            $statusCode = 400;
         }
-        $view = $this->view(null, 204);
+        $view = $this->view($out, $statusCode);
+        if ($httpHeader) {
+            $view->setHeaders($httpHeader);
+        }
         return $this->handleView($view);
     }
 }

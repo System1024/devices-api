@@ -15,6 +15,12 @@ class DeviceRepository extends EntityRepository
 {
     public function addDevice(Device $browser)
     {
+        $double = $this->findOneByName($browser->getName());
+
+        if ($double instanceof Device) {
+            throw new \Exception('Device with such name already presents in DB');
+        }
+
         $entityManager = $this->getEntityManager();
         $entityManager->persist($browser);
         $entityManager->flush();

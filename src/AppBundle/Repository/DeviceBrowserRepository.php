@@ -14,6 +14,13 @@ class DeviceBrowserRepository extends EntityRepository
 {
     public function addDeviceBrowser(DeviceBrowser $browser)
     {
+        $double = $this->findOneBy([
+            'device' => $browser->getDevice(),
+            'browserversion' => $browser->getBrowserversion()
+        ]);
+        if ($double instanceof DeviceBrowser) {
+            throw new \Exception('DeviceBrowser with such parameters already presents in DB');
+        }
         $entityManager = $this->getEntityManager();
         $entityManager->persist($browser);
         $entityManager->flush();

@@ -68,9 +68,11 @@ class BrowserVersionController extends FOSRestController
         $statusCode = 204;
         $out = null;
 
+
         if ($form->isValid()) {
             $repository = $this->getDoctrine()->getRepository('AppBundle:Browserversion');
-            $repository->modifyBrowserversion($entity);
+            $repository->addBrowserversion($entity);
+
         } else {
 
             $out = [
@@ -82,6 +84,10 @@ class BrowserVersionController extends FOSRestController
             $statusCode = 400;
         }
         $view = $this->view($out, $statusCode);
+        $view->setHeader('Location', $this->generateUrl(
+            'api_v1_get_browserversion', array('browserVersion' => $entity->getId()),
+            true
+        ));
         return $this->handleView($view);
 
     }

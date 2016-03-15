@@ -10,20 +10,23 @@ namespace tests\AppBundle\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
-class BrowserControllerTest extends WebTestCase
+class DeviceControllerTest extends WebTestCase
 {
     protected $client;
+    protected $deviceTypeId = 1;
 
     protected function setUp()
     {
-        $this->client   = static::createClient();
+        $this->client = static::createClient();
     }
 
-    public function testAddBrowser()
+    public function testAddDevice()
     {
-        $this->client->request('POST', '/api/v1/browsers.json',[
-            'browser' => [
-                'name' => 'TestBrowser'
+        $this->client->request('POST', '/api/v1/devices.json',[
+            'device' => [
+                'name' => 'TestDevice'
+                ,'description' => 'Test Description'
+                ,'devicetype' => $this->deviceTypeId
             ]
         ]);
 
@@ -37,11 +40,13 @@ class BrowserControllerTest extends WebTestCase
         return $location;
     }
 
-    public function testAddTheSameNameBrowser()
+    public function testAddTheSameNameDevice()
     {
-        $this->client->request('POST', '/api/v1/browsers.json',[
-            'browser' => [
-                'name' => 'TestBrowser'
+        $this->client->request('POST', '/api/v1/devices.json',[
+            'device' => [
+                'name' => 'TestDevice'
+                ,'description' => 'Test Description'
+                ,'devicetype' => $this->deviceTypeId
             ]
         ]);
 
@@ -54,9 +59,9 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testGetBrowser($link)
+    public function testGetDevice($link)
     {
         $this->client->request('GET', $link);
         $response = $this->client->getResponse();
@@ -64,14 +69,16 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testEditBrowser($link)
+    public function testEditDevice($link)
     {
 
         $this->client->request('PATCH', $link.'/modify.json',[
-            'browser' => [
-                'name' => 'TestBrowser-Edited'
+            'device' => [
+                'name' => 'TestDevice-Edited'
+                ,'description' => 'Test Description'
+                ,'devicetype' => $this->deviceTypeId
             ]
         ]);
 
@@ -80,11 +87,11 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testGetBrowsersList()
+    public function testGetDevicesList()
     {
-        $this->client->request('GET', '/api/v1/browsers/all.json');
+        $this->client->request('GET', '/api/v1/devices/all.json');
         $response = $this->client->getResponse();
         $this->assertEquals(200, $response->getStatusCode(), $response->getContent());
 
@@ -95,9 +102,9 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testRemoveBrowser($link)
+    public function testRemoveDevice($link)
     {
         $this->client->request('DELETE', $link);
         $response = $this->client->getResponse();
@@ -105,9 +112,9 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testRemoveBrowserNotFound($link)
+    public function testRemoveDeviceNotFound($link)
     {
         $this->client->request('DELETE', $link);
         $response = $this->client->getResponse();
@@ -115,13 +122,15 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testEditBrowserNotFound($link)
+    public function testEditDeviceNotFound($link)
     {
         $this->client->request('PATCH', $link.'/modify.json',[
-            'browser' => [
-                'name' => 'TestBrowser-Edited'
+            'device' => [
+                'name' => 'TestDevice-Edited'
+                ,'description' => 'Test Description'
+                ,'devicetype' => $this->deviceTypeId
             ]
         ]);
 
@@ -130,9 +139,9 @@ class BrowserControllerTest extends WebTestCase
     }
 
     /**
-     * @depends testAddBrowser
+     * @depends testAddDevice
      */
-    public function testGetBrowserNotFound($link)
+    public function testGetDeviceNotFound($link)
     {
         $this->client->request('GET', $link);
         $response = $this->client->getResponse();

@@ -75,7 +75,7 @@ class DeviceController extends FOSRestController
             $repository->addDevice($entity);
 
             $httpHeaders = [
-                'Location',
+                'Location' =>
                 $this->generateUrl(
                     'api_v1_get_device', array('device' => $entity->getId()),
                     true

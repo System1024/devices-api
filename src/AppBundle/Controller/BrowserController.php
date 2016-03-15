@@ -68,31 +68,41 @@ class BrowserController extends FOSRestController
 
         $statusCode = 204;
         $out = null;
-        $header = null;
+        $httpHeader = null;
 
         if ($form->isValid()) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Browser');
-            $repository->addBrowser($entity);
+            try {
+                $repository = $this->getDoctrine()->getRepository('AppBundle:Browser');
+                $repository->addBrowser($entity);
 
+                $httpHeader = ['Location' =>
+                    $this->generateUrl(
+                        'api_v1_get_browser', array('browser' => $entity->getId()),
+                        true
+                    )
+                ];
+            } catch (\Exception $e) {
+                $statusCode = 500;
+                $out = [
+                    'result' => 'Fail',
+                    'message' => $e->getMessage(),
+                ];
+            }
         } else {
 
             $out = [
                 'result' => 'Fail',
                 'message' => 'Form not valid',
-                'request' => $request->request,
                 'errors' => $form->getErrors()
             ];
             $statusCode = 400;
         }
 
         $view = $this->view($out, $statusCode);
-        if ($header) {
-            $view->setHeader('Location',
-                $this->generateUrl(
-                    'api_v1_get_browser', array('browser' => $entity->getId()),
-                    true
-                )
-            );
+
+        if ($httpHeader) {
+            $view->setHeaders($httpHeader);
+
         }
         return $this->handleView($view);
 
