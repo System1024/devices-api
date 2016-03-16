@@ -4,7 +4,6 @@ namespace AppBundle\Controller;
 
 use AppBundle\Entity\Browser;
 use AppBundle\Form\BrowserType;
-use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -23,7 +22,6 @@ class BrowserController extends FOSRestController
         if ($browser === null) {
             throw new NotFoundHttpException('Browser not found');
         }
-
         $view = $this->view($browser, 200)
             ->setTemplate('default/browser.html.twig')
             ->setTemplateVar('browser');
@@ -38,7 +36,7 @@ class BrowserController extends FOSRestController
      */
     public function allBrowserAction()
     {
-        $devices = $this->getDoctrine()->getRepository('AppBundle:Browser')->findAll();
+        $devices = $this->container->get('app.service.browser')->findAll();
 
         if ($devices === null) {
             throw new NotFoundHttpException('Nothing found');
@@ -72,29 +70,24 @@ class BrowserController extends FOSRestController
 
         if ($form->isValid()) {
             try {
-                $repository = $this->getDoctrine()->getRepository('AppBundle:Browser');
-                $repository->addBrowser($entity);
+
+                $entity = $this->container->get('app.service.browser')->addBrowser($entity);
 
                 $httpHeader = ['Location' =>
                     $this->generateUrl(
-                        'api_v1_get_browser', array('browser' => $entity->getId()),
+                        'api_v1_get_browser', ['browser' => $entity->getId()],
                         true
                     )
                 ];
-            } catch (\Exception $e) {
+            }
+            catch (\Exception $e) {
                 $statusCode = 500;
-                $out = [
-                    'result' => 'Fail',
-                    'message' => $e->getMessage(),
-                ];
+                $out = (new BadResult($e->getMessage()))->getResult();
+
             }
         } else {
 
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Form not valid',
-                'errors' => $form->getErrors()
-            ];
+            $out = (new BadResult('Form not valid'))->getResult();
             $statusCode = 400;
         }
 
@@ -120,24 +113,17 @@ class BrowserController extends FOSRestController
         $statusCode = 204;
         $out = null;
 
-        if ($entity) {
+//        if ($entity) {
             try {
-                $repository = $this->getDoctrine()->getRepository('AppBundle:Browser');
-                $repository->removeBrowser($entity);
+                $this->container->get('app.service.browser')->removeBrowser($entity);
             } catch (\Exception $e ) {
-                $out = [
-                    'result' => 'Fail',
-                    'message' => $e->getMessage()
-                ];
+                $out = (new BadResult($e->getMessage()))->getResult();
                 $statusCode = 409;
             }
-        } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
-            $statusCode = 404;
-        }
+//        } else {
+//              $out = (new BadResult('Resource not found'))->getResult();
+//            $statusCode = 404;
+//        }
         $view = $this->view($out, $statusCode);
         return $this->handleView($view);
     }
@@ -146,6 +132,7 @@ class BrowserController extends FOSRestController
      * Edit browser
      *
      * @param $browser Browser
+     * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
@@ -158,13 +145,9 @@ class BrowserController extends FOSRestController
         $form->handleRequest($request);
 
         if ($browser) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Browser');
-            $repository->modifyBrowser($browser);
+            $this->container->get('app.service.browser')->modifyBrowser($browser);
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
+            $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;
         }
         $view = $this->view($out, $statusCode);

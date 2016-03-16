@@ -19,7 +19,7 @@ class DeviceBrowserController extends FOSRestController
     public function allDevicebrowsersAction()
     {
 
-        $devices = $this->getDoctrine()->getRepository('AppBundle:DeviceBrowser')->findAll();
+        $devices = $this->container->get('app.service.devicebrowser')->findAll();
 
         if ($devices === null) {
             throw new NotFoundHttpException('Nothing found');
@@ -44,13 +44,9 @@ class DeviceBrowserController extends FOSRestController
         $out = null;
 
         if ($deviceBrowser) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:DeviceBrowser');
-            $repository->removeDeviceBrowser($deviceBrowser);
+            $this->container->get('app.service.devicebrowser')->removeDeviceBrowser($deviceBrowser);
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
+            $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;
         }
         $view = $this->view($out, $statusCode);
@@ -75,13 +71,9 @@ class DeviceBrowserController extends FOSRestController
         $form->handleRequest($request);
 
         if ($entity) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:DeviceBrowser');
-            $repository->modifyDeviceBrowser($entity);
+            $this->container->get('app.service.devicebrowser')->modifyDeviceBrowser($entity);
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
+            $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;
         }
         $view = $this->view($out, $statusCode);
@@ -128,19 +120,13 @@ class DeviceBrowserController extends FOSRestController
         $httpHeader = null;
 
         if ($form->isValid()) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:DeviceBrowser');
-            $repository->addDeviceBrowser($entity);
+            $this->container->get('app.service.devicebrowser')->addDeviceBrowser($entity);
             $httpHeader = [
                 'Location' => $this->generateUrl('api_v1_get_devicebrowsers', ['id' => $entity->getId()])
             ];
 
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Form not valid',
-                'request' => $request->request,
-                'errors' => $form->getErrors()
-            ];
+            $out = (new BadResult('Form not valid'))->getResult();
             $statusCode = 400;
         }
         $view = $this->view($out, $statusCode);

@@ -7,3 +7,15 @@ services:
 #    service_name:
 #        class: AppBundle\Directory\ClassName
 #        arguments: ["@another_service_name", "plain_value", "%parameter_name%"]
+  app.service.browser:
+    class: 'AppBundle\Service\RepositoryService'
+    arguments: ["@=service('doctrine').getRepository('AppBundle:Browser')"]
+  app.service.device:
+    class: 'AppBundle\Service\RepositoryService'
+    arguments: ["@=service('doctrine').getRepository('AppBundle:Device')"]
+  app.service.devicebrowser:
+    class: 'AppBundle\Service\RepositoryService'
+    arguments: ["@=service('doctrine').getRepository('AppBundle:DeviceBrowser')"]
+  app.service.browserversion:
+    class: 'AppBundle\Service\RepositoryService'
+    arguments: ["@=service('doctrine').getRepository('AppBundle:Browserversion')"]

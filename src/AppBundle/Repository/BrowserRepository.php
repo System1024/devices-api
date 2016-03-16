@@ -13,16 +13,33 @@ use Doctrine\ORM\EntityRepository;
  */
 class BrowserRepository extends EntityRepository
 {
-    public function addBrowser(Browser $browser)
+    /**
+     * @param Browser $browser
+     *
+     * @return bool
+     *
+     * @throws \Exception
+     */
+    protected function checkUniqueName(Browser $browser)
     {
         $double = $this->findOneByName($browser->getName());
         if ($double instanceof Browser) {
             throw new \Exception('Browser with such name already presents in DB');
         }
 
+        return false;
+    }
+
+    public function addBrowser(Browser $browser)
+    {
+
+        $this->checkUniqueName($browser);
+
         $entityManager = $this->getEntityManager();
         $entityManager->persist($browser);
         $entityManager->flush();
+
+        return $browser;
     }
 
     public function removeBrowser(Browser $browser)

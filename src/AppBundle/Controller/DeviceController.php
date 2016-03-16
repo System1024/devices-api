@@ -38,7 +38,7 @@ class DeviceController extends FOSRestController
      */
     public function allDeviceAction()
     {
-        $devices = $this->getDoctrine()->getRepository('AppBundle:Device')->findAll();
+        $devices = $this->container->get('app.service.device')->findAll();
 
         if ($devices === null) {
             throw new NotFoundHttpException('Nothing found');
@@ -71,8 +71,7 @@ class DeviceController extends FOSRestController
 
         if ($form->isValid()) {
 
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Device');
-            $repository->addDevice($entity);
+            $this->container->get('app.service.device')->addDevice($entity);
 
             $httpHeaders = [
                 'Location' =>
@@ -82,12 +81,7 @@ class DeviceController extends FOSRestController
                 )
             ];
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Form not valid',
-                'request' => $request->request,
-                'errors' => $form->getErrors()
-            ];
+            $out = (new BadResult('Form not valid'))->getResult();
             $statusCode = 400;
         }
         $view = $this->view($out, $statusCode);
@@ -113,13 +107,9 @@ class DeviceController extends FOSRestController
         $out = null;
 
         if ($entity) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Device');
-            $repository->removeDevice($entity);
+            $this->container->get('app.service.device')->removeDevice($entity);
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
+            $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;
         }
         $view = $this->view($out, $statusCode);
@@ -144,16 +134,10 @@ class DeviceController extends FOSRestController
         $out = null;
 
         if ($form->isValid()) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Device');
-            $repository->modifyDevice($entity);
+            $this->container->get('app.service.device')->modifyDevice($entity);
 
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Form not valid',
-                'request' => $request->request,
-                'errors' => $form->getErrors()
-            ];
+            $out = (new BadResult('Form not valid'))->getResult();
             $statusCode = 400;
         }
         $view = $this->view($out, $statusCode);

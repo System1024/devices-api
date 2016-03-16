@@ -39,7 +39,7 @@ class BrowserVersionController extends FOSRestController
      */
     public function allBrowserversionAction()
     {
-        $devices = $this->getDoctrine()->getRepository('AppBundle:Browserversion')->findAll();
+        $devices = $this->container->get('app.service.browserversion')->findAll();
 
         if ($devices === null) {
             throw new NotFoundHttpException('Nothing found');
@@ -70,17 +70,9 @@ class BrowserVersionController extends FOSRestController
 
 
         if ($form->isValid()) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Browserversion');
-            $repository->addBrowserversion($entity);
-
+            $this->container->get('app.service.browserversion')->addBrowserversion($entity);
         } else {
-
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Form not valid',
-                'request' => $request->request,
-                'errors' => $form->getErrors()
-            ];
+            $out = (new BadResult('Form not valid'))->getResult();
             $statusCode = 400;
         }
         $view = $this->view($out, $statusCode);
@@ -106,13 +98,9 @@ class BrowserVersionController extends FOSRestController
         $out = null;
 
         if ($entity) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Browserversion');
-            $repository->removeBrowserversion($entity);
+            $this->container->get('app.service.browserversion')->removeBrowserversion($entity);
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
+            $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;
         }
         $view = $this->view($out, $statusCode);
@@ -135,13 +123,9 @@ class BrowserVersionController extends FOSRestController
         $form->handleRequest($request);
 
         if ($entity) {
-            $repository = $this->getDoctrine()->getRepository('AppBundle:Browserversion');
-            $repository->modifyBrowserversion($entity);
+            $this->container->get('app.service.browserversion')->modifyBrowserversion($entity);
         } else {
-            $out = [
-                'result' => 'Fail',
-                'message' => 'Resource not found'
-            ];
+            $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;
         }
         $view = $this->view($out, $statusCode);
