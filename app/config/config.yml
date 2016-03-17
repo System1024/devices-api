@@ -75,9 +75,8 @@ fos_rest:
     format_listener:
       enabled: true
 
-fos_oauth_server:
-    db_driver: orm       # Drivers available: orm, mongodb, or propel
-    client_class:        AppBundle\Entity\Client
-    access_token_class:  AppBundle\Entity\AccessToken
-    refresh_token_class: AppBundle\Entity\RefreshToken
-    auth_code_class:     AppBundle\Entity\AuthCode
+doctrine_migrations:
+    dir_name: "%kernel.root_dir%/DoctrineMigrations"
+    namespace: Application\Migrations
+    table_name: migration_versions
+    name: Application Migrations

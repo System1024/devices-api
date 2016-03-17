@@ -1,13 +1,12 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Sergey
- * Date: 16.03.2016
- * Time: 8:04
- */
 
 namespace AppBundle\Service;
 
+/**
+ * RepositoryService interprets DoctrineRepository as service
+ *
+ * @package AppBundle\Service
+ */
 class RepositoryService
 {
     protected $repository;

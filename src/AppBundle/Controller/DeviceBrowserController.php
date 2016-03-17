@@ -96,9 +96,6 @@ class DeviceBrowserController extends FOSRestController
         }
 
         $view = $this->view($id, 200);
-//            ->setTemplate('default/device.html.twig')
-//            ->setTemplateVar('device');
-
         return $this->handleView($view);
     }
 

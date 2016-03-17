@@ -6,7 +6,6 @@ namespace AppBundle\Controller;
 use AppBundle\Entity\Device;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
 use AppBundle\Form\DeviceType;
 
 class DeviceClientController extends Controller

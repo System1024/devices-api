@@ -19,3 +19,6 @@ services:
   app.service.browserversion:
     class: 'AppBundle\Service\RepositoryService'
     arguments: ["@=service('doctrine').getRepository('AppBundle:Browserversion')"]
+  app.service.devicetype:
+    class: 'AppBundle\Service\RepositoryService'
+    arguments: ["@=service('doctrine').getRepository('AppBundle:Devicetypes')"]

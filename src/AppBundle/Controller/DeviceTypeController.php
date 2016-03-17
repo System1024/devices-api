@@ -2,65 +2,65 @@
 
 namespace AppBundle\Controller;
 
-use AppBundle\Entity\Browser;
-use AppBundle\Form\BrowserType;
+use AppBundle\Entity\Devicetypes;
+use AppBundle\Form\DevicetypesType;
 use FOS\RestBundle\Controller\FOSRestController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 
-class BrowserController extends FOSRestController
+class DeviceTypeController extends FOSRestController
 {
     /**
-     * Get browser
+     * Get devicetype
      *
-     * @param $browser Browser
+     * @param Devicetypes $deviceType Devicetypes
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function getBrowserAction(Browser $browser)
+    public function getDevicetypeAction(Devicetypes $deviceType)
     {
-        if ($browser === null) {
-            throw new NotFoundHttpException('Browser not found');
+        if ($deviceType === null) {
+            throw new NotFoundHttpException('Not found');
         }
-        $view = $this->view($browser, 200)
-            ->setTemplate('default/browser.html.twig')
-            ->setTemplateVar('browser');
+        $view = $this->view($deviceType, 200)
+            ->setTemplate('default/devicetype.html.twig')
+            ->setTemplateVar('devicetype');
 
         return $this->handleView($view);
     }
 
     /**
-     * Get list of browsers
+     * Get list of devicetypes
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function allBrowserAction()
+    public function allDevicetypeAction()
     {
-        $devices = $this->container->get('app.service.browser')->findAll();
+        $devices = $this->container->get('app.service.devicetype')->findAll();
 
         if ($devices === null) {
             throw new NotFoundHttpException('Nothing found');
         }
 
         $view = $this->view($devices, 200)
-            ->setTemplate('default/browserslist.html.twig')
-            ->setTemplateVar('browsersList');
+            ->setTemplate('default/devicetypeslist.html.twig')
+            ->setTemplateVar('devicetypesList');
 
         return $this->handleView($view);
     }
 
     /**
-     * Add new browser to DB
+     * Add new devicetype to DB
      *
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function postBrowserAction(Request $request)
+    public function postDevicetypeAction(Request $request)
     {
 
-        $entity = new Browser();
-        $form = $this->createForm(BrowserType::class, $entity, ['method' => $request->getMethod()]);
+        $entity = new Devicetypes();
+        $form = $this->createForm(DevicetypesType::class, $entity, ['method' => $request->getMethod()]);
 
         $form->handleRequest($request);
 
@@ -71,11 +71,11 @@ class BrowserController extends FOSRestController
         if ($form->isValid()) {
             try {
 
-                $entity = $this->container->get('app.service.browser')->addBrowser($entity);
+                $this->container->get('app.service.devicetype')->addDeviceType($entity);
 
                 $httpHeader = ['Location' =>
                     $this->generateUrl(
-                        'api_v1_get_browser', ['browser' => $entity->getId()],
+                        'api_v1_get_devicetype', ['deviceType' => $entity->getId()],
                         true
                     )
                 ];
@@ -87,7 +87,8 @@ class BrowserController extends FOSRestController
             }
         } else {
 
-            $out = (new BadResult('Form not valid'))->getResult();
+//            $out = (new BadResult('Form not valid'))->getResult();
+            $out = (new BadResult($form->getErrors()))->getResult();
             $statusCode = 400;
         }
 
@@ -102,20 +103,19 @@ class BrowserController extends FOSRestController
     }
 
     /**
-     * Remove browser from DB
+     * Remove devicetype from DB
      *
-     * @param Browser $entity
-     *
+     * @param Devicetypes $entity
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function deleteBrowserAction(Browser $entity)
+    public function deleteDevicetypeAction(Devicetypes $entity)
     {
         $statusCode = 204;
         $out = null;
 
         if ($entity) {
             try {
-                $this->container->get('app.service.browser')->removeBrowser($entity);
+                $this->container->get('app.service.devicetype')->removeDeviceType($entity);
             } catch (\Exception $e ) {
                 $out = (new BadResult($e->getMessage()))->getResult();
                 $statusCode = 409;
@@ -129,23 +129,23 @@ class BrowserController extends FOSRestController
     }
 
     /**
-     * Edit browser
+     * Edit devicetype
      *
-     * @param $browser Browser
+     * @param $deviceType Devicetypes
      * @param Request $request
      *
      * @return \Symfony\Component\HttpFoundation\Response
      */
-    public function modifyBrowserAction(Browser $browser, Request $request)
+    public function modifyDevicetypeAction(Devicetypes $deviceType, Request $request)
     {
         $statusCode = 204;
         $out = null;
 
-        $form = $this->createForm(BrowserType::class, $browser, ['method' => $request->getMethod()]);
+        $form = $this->createForm(DevicetypesType::class, $deviceType, ['method' => $request->getMethod()]);
         $form->handleRequest($request);
 
-        if ($browser) {
-            $this->container->get('app.service.browser')->modifyBrowser($browser);
+        if ($deviceType) {
+            $this->container->get('app.service.devicetype')->modifyDeviceType($deviceType);
         } else {
             $out = (new BadResult('Resource not found'))->getResult();
             $statusCode = 404;

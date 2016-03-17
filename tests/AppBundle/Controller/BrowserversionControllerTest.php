@@ -21,7 +21,7 @@ class BrowserversionControllerTest extends WebTestCase
     }
 
     protected function getBrowser() {
-        $this->client->request('GET', '/api/v1/browsers/all.json');
+        $this->client->request('GET', '/api/v1/browsers/all');
         $response = $this->client->getResponse();
 
         $json = json_decode($response->getContent());

@@ -1,4 +1,17 @@
-.checkout
-=========
+# The solution
 
-A Symfony project created on March 12, 2016, 11:29 am.
+To deploy the project please 
+
+configure your database in parameters.yml
+
+and run:
+
+>composer update
+
+>php bin/console doctrine:database:create
+
+>php bin/console doctrine:migrations:migrate
+
+For run functional tests run:
+
+>php phpunit
